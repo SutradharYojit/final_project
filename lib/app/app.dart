@@ -1,7 +1,7 @@
+import 'package:final_project_blog_app/resources/color_manager.dart';
+import 'package:final_project_blog_app/routes/route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../view/view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -12,13 +12,18 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
-          title: 'Flutter Demo',
+        return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            colorScheme: ColorScheme.fromSeed(seedColor: ColorManager.gradientDarkPurpleColor),
             useMaterial3: true,
+            fontFamily: "PrimaryFonts",
+            cardTheme: const CardTheme(
+              surfaceTintColor: ColorManager.whiteColor,
+            ),
+            scaffoldBackgroundColor: ColorManager.whiteColor
           ),
-          home: const MyHomePage(title: 'Flutter Demo Home Page'),
+          routerConfig: router,
         );
       },
     );
