@@ -51,7 +51,7 @@ class FireBaseServices {
 
   Future signIN(BuildContext context, {required String textEmail, required String textPass}) async {
     debugPrint("Button pressed");
-    final notExist = bar.snack(StringManager.serviceFirebaseNoAccount, ColorManager.redColor);
+    final notExist = bar.snack(ServiceStringManager.serviceFirebaseNoAccount, ColorManager.redColor);
 
     showDialog(
         context: context,

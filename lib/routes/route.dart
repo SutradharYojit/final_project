@@ -29,6 +29,24 @@ GoRouter router = GoRouter(
       builder: (context, state) {
         return DashBoardScreen();
       },
-    )
+    ),
+    GoRoute(
+      path: RoutesName.blogDetailsScreen,
+      builder: (context, state) {
+        return const BlogDetailsScreen();
+      },
+    ),
+    GoRoute(
+      path: RoutesName.contactUsScreen,
+      builder: (context, state) {
+        return ContactFormScreen();
+      },
+    ),
+    GoRoute(
+      path: RoutesName.bloggerProfileScreen,
+      builder: (context, state) {
+        return BloggerProfileScreen();
+      },
+    ),
   ],
 );

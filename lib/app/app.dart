@@ -15,13 +15,13 @@ class MyApp extends StatelessWidget {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: ColorManager.gradientDarkPurpleColor),
-            useMaterial3: true,
-            fontFamily: "PrimaryFonts",
-            cardTheme: const CardTheme(
-              surfaceTintColor: ColorManager.whiteColor,
-            ),
-            scaffoldBackgroundColor: ColorManager.whiteColor
+              colorScheme: ColorScheme.fromSeed(seedColor: ColorManager.gradientDarkPurpleColor),
+              useMaterial3: true,
+              fontFamily: "PrimaryFonts",
+              cardTheme: const CardTheme(
+                surfaceTintColor: ColorManager.whiteColor,
+              ),
+              scaffoldBackgroundColor: ColorManager.whiteColor
           ),
           routerConfig: router,
         );

@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../view.dart';
 
-class DashBoardScreen extends StatelessWidget {
-  DashBoardScreen({super.key});
+class DashBoardScreen extends StatefulWidget {
+  const DashBoardScreen({super.key});
 
+  @override
+  State<DashBoardScreen> createState() => _DashBoardScreenState();
+}
+
+class _DashBoardScreenState extends State<DashBoardScreen> {
   final ValueNotifier<int> _screenIndex = ValueNotifier(0);
-  final List<Widget> _screens = [const MyHomePage()];
+
+  final List<Widget> _screens = [
+    const PortfolioScreen(),
+    const BlogListScreen(),
+      ContactFormScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +32,16 @@ class DashBoardScreen extends StatelessWidget {
           return BottomNavigationBar(
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(Icons.article),
+                icon: Icon(Icons.supervised_user_circle_outlined),
+                label: "Portfolio",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.article_outlined),
                 label: "Blog",
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.add_circle_outline_rounded),
-                label: "Add Blog",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.supervised_user_circle_rounded),
-                label: "Profile",
+                icon: Icon(Icons.contactless_outlined),
+                label: "Contact Us",
               ),
             ],
             currentIndex: value,

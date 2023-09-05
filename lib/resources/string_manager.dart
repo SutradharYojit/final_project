@@ -21,8 +21,11 @@ class StringManager {
   static const haveAccountTxt = "Already have an account?";
 
   //App Service
+
+
+}
+
+class ServiceStringManager{
   static const serviceFirebaseNoAccount = "Account doesn't exist";
-
-
 
 }
