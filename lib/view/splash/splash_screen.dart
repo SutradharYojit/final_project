@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:final_project_blog_app/routes/routes_name.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +17,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final userPreferences = UserPreferences();
+  final userAuth=FirebaseAuth.instance.currentUser?.uid;
   @override
   void initState() {
     super.initState();
@@ -32,6 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
             userPreferences.pass != null &&
             userPreferences.email!.isNotEmpty &&
             userPreferences.pass!.isNotEmpty) {
+          log(userAuth.toString());
           context.go(RoutesName.dashboardScreen);
         } else {
           log(userPreferences.email.toString());

@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../resources/resources.dart';
 import '../../../services/services.dart';
+import '../signup/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -92,9 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             _emailController.text.trim().isEmpty ||
                             _passController.text.trim() == "" ||
                             _passController.text.trim().isEmpty) {
-                          final notExist = bar.snack(StringManager.requiredWarningTxt, ColorManager.redColor);
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(notExist);
+                          requiredAllFilled(context);
                         } else {
                           await FireBaseServices().signIN(
                             context,

@@ -13,12 +13,19 @@ class SignUpScreen extends StatefulWidget {
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
+void requiredAllFilled(BuildContext context) {
+  final bar = WarningBar();
+
+  final notExist = bar.snack(StringManager.requiredWarningTxt, ColorManager.redColor);
+  ScaffoldMessenger.of(context).clearSnackBars();
+  ScaffoldMessenger.of(context).showSnackBar(notExist);
+}
+
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
   final bar = WarningBar();
-
 
   @override
   void dispose() {
@@ -27,6 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _emailController.dispose();
     _passController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -110,16 +118,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             _userController.text.trim().isEmpty ||
                             _passController.text.trim() == "" ||
                             _passController.text.trim().isEmpty) {
-                          final notExist = bar.snack(StringManager.requiredWarningTxt, ColorManager.redColor);
-                          ScaffoldMessenger.of(context).clearSnackBars();
-                          ScaffoldMessenger.of(context).showSnackBar(notExist);
+                          requiredAllFilled(context);
                         } else {
-                          await FireBaseServices().signUP(
-                            context,
-                            textEmail: _emailController.text.trim(),
-                            textPass: _passController.text.trim(),
-                            userName: _userController.text.trim()
-                          );
+                          await FireBaseServices().signUP(context,
+                              textEmail: _emailController.text.trim(),
+                              textPass: _passController.text.trim(),
+                              userName: _userController.text.trim());
                         }
                       },
                     ),

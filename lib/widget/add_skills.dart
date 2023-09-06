@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddSkills extends StatelessWidget {
-  const AddSkills({super.key, required this.onPressed, required this.text});
+  const AddSkills({super.key, this.onPressed, required this.text});
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String text;
 
   @override
@@ -20,7 +20,7 @@ class AddSkills extends StatelessWidget {
             style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
           ),
         ),
-        IconButton.filledTonal(onPressed: () {}, icon: const Icon(Icons.add))
+        IconButton.filledTonal(onPressed: onPressed, icon: const Icon(Icons.add))
       ],
     );
   }

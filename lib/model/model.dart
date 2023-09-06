@@ -1,0 +1,1 @@
+export 'blog_data_model.dart';

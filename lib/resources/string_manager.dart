@@ -11,7 +11,7 @@ class StringManager {
   static const passHintTxt = "Enter Password";
   static const passLabelTxt = "Password";
   static const requiredWarningTxt = "Enter all Filled";
-  static const noAccountTxt = "Don\'t have an account?";
+  static const noAccountTxt = "Don't have an account?";
 
   //SignUp Screen
   static const signUpText = "SignUp";
@@ -20,12 +20,33 @@ class StringManager {
   static const signupTitle = "Create your account to start sharing your thoughts with the world!";
   static const haveAccountTxt = "Already have an account?";
 
-  //App Service
+  //Contact Screen
+  static const contactAppBarTxt = "Contact Us";
+  static const nameHintTxt = "Enter Your Name";
+  static const nameLabelTxt = "Name";
+  static const phoneHintTxt = "Enter Phone Number";
+  static const phoneLabelTxt = "Phone Number";
+  static const descriptionHintTxt = "Enter Description";
+  static const descriptionLabelTxt = "Description";
+  static const sendMessageBtn = "Send Message";
+
+  //Add Blog Screen
+  static const titleHintTxt = "Enter Blog Title";
+  static const titleLabelTxt = "Blog Title";
+  static const addBlogBtn = "Add Blog";
 
 
 }
 
-class ServiceStringManager{
+class FBServiceManager {
   static const serviceFirebaseNoAccount = "Account doesn't exist";
-
+  static const serviceFbSentSuccess = "Message sent Successfully";
+  static const serviceFbSentFail = "Message Failed";
+  static const dbUser = "users";
+  static const dbContactUs = "contactUs";
+  static const fbUserName = "user_name";
+  static const fbEmail = "email";
+  static const fbDescription = "description";
+  static const fbPhoneNumber = "phoneNumber";
+  static const fbUid = "uid";
 }
