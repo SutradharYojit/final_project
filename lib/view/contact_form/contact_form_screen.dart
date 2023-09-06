@@ -1,15 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../resources/resources.dart';
+import '../../services/services.dart';
 import '../../widget/widget.dart';
+import '../view.dart';
 
-class ContactFormScreen extends StatelessWidget {
-  ContactFormScreen({super.key});
+class ContactFormScreen extends StatefulWidget {
+  const ContactFormScreen({super.key});
 
+  @override
+  State<ContactFormScreen> createState() => _ContactFormScreenState();
+}
+
+class _ContactFormScreenState extends State<ContactFormScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+
+  void onTap() async {
+    if (_emailController.text.trim() == "" ||
+        _emailController.text.trim().isEmpty ||
+        _nameController.text.trim() == "" ||
+        _nameController.text.trim().isEmpty ||
+        _descriptionController.text.trim() == "" ||
+        _descriptionController.text.trim().isEmpty ||
+        _phoneController.text.trim() == "" ||
+        _phoneController.text.trim().isEmpty) {
+      requiredAllFilled(context);
+    } else {
+      await FireBaseServices().contactUs(
+        context,
+        name: _nameController.text.trim(),
+        number: _phoneController.text.trim(),
+        email: _emailController.text.trim(),
+        description: _descriptionController.text.trim(),
+      );
+      _nameController.clear();
+      _phoneController.clear();
+      _emailController.clear();
+      _descriptionController.clear();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +52,7 @@ class ContactFormScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const AppBarTitle(
-            title: "Contact Us",
+            title: StringManager.contactAppBarTxt,
           ),
         ),
         body: SafeArea(
@@ -32,8 +64,8 @@ class ContactFormScreen extends StatelessWidget {
                   padding: EdgeInsets.only(top: 15.r),
                   child: PrimaryTextFilled(
                     controller: _nameController,
-                    hintText: "Enter Your Name",
-                    labelText: "Name",
+                    hintText: StringManager.nameHintTxt,
+                    labelText: StringManager.nameLabelTxt,
                     prefixIcon: const Icon(
                       Icons.text_format_rounded,
                       color: ColorManager.gradientPurpleColor,
@@ -45,8 +77,8 @@ class ContactFormScreen extends StatelessWidget {
                   padding: EdgeInsets.only(top: 15.r),
                   child: PrimaryTextFilled(
                     controller: _phoneController,
-                    hintText: "Enter phone Number",
-                    labelText: "Phone Number",
+                    hintText: StringManager.phoneHintTxt,
+                    labelText: StringManager.phoneLabelTxt,
                     prefixIcon: const Icon(
                       Icons.call,
                       color: ColorManager.gradientPurpleColor,
@@ -75,8 +107,8 @@ class ContactFormScreen extends StatelessWidget {
                   padding: EdgeInsets.only(top: 15.r),
                   child: PrimaryTextFilled(
                     controller: _descriptionController,
-                    hintText: "Enter Description",
-                    labelText: "Description",
+                    hintText: StringManager.descriptionHintTxt,
+                    labelText: StringManager.descriptionLabelTxt,
                     prefixIcon: const Icon(
                       Icons.description,
                       color: ColorManager.gradientPurpleColor,
@@ -86,8 +118,8 @@ class ContactFormScreen extends StatelessWidget {
                   ),
                 ),
                 PrimaryButton(
-                  title: "Send Message",
-                  onTap: () async {},
+                  title: StringManager.sendMessageBtn,
+                  onTap: onTap,
                 ),
               ],
             ),

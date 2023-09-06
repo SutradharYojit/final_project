@@ -48,5 +48,11 @@ GoRouter router = GoRouter(
         return BloggerProfileScreen();
       },
     ),
+    GoRoute(
+      path: RoutesName.addBlogScreen,
+      builder: (context, state) {
+        return AddBlogScreen();
+      },
+    ),
   ],
 );

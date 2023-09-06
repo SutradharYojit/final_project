@@ -3,13 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../resources/resources.dart';
 import '../../widget/widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'add_skill_buttomsheet.dart';
 import 'blogger_skill_provider.dart';
 
-enum Blogger { skills, achievement, project }
-
-class BloggerProfileScreen extends StatelessWidget {
-  BloggerProfileScreen({super.key});
+class PortfolioProfileScreen extends StatelessWidget {
+  PortfolioProfileScreen({super.key});
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -91,12 +88,6 @@ class BloggerProfileScreen extends StatelessWidget {
                   ),
                   AddSkills(
                     text: "Skills",
-                    onPressed: () {
-                      buildShowModalBottomSheet(
-                        context,
-                        widget: const AddSkillModalSheet(title: "Add Skill", blogger: Blogger.skills),
-                      );
-                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
@@ -108,12 +99,8 @@ class BloggerProfileScreen extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            return Dismissible(
-                              onDismissed: (direction) {},
-                              key: UniqueKey(),
-                              child: CustomAvatar(
-                                title: "${index + 1}. ${skill[index]}",
-                              ),
+                            return const CustomAvatar(
+                              title: "arsadasdasdasdt",
                             );
                           },
                         );
@@ -126,12 +113,6 @@ class BloggerProfileScreen extends StatelessWidget {
                   ),
                   AddSkills(
                     text: "Achievement",
-                    onPressed: () {
-                      buildShowModalBottomSheet(
-                        context,
-                        widget: const AddSkillModalSheet(title: "Add Achievement", blogger: Blogger.achievement),
-                      );
-                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
@@ -144,13 +125,8 @@ class BloggerProfileScreen extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            return Dismissible(
-                              direction: DismissDirection.none,
-                              onDismissed: (direction) {},
-                              key: UniqueKey(),
-                              child: CustomAvatar(
-                                title: "${index + 1}. ${achievement[index]}",
-                              ),
+                            return const CustomAvatar(
+                              title: "art",
                             );
                           },
                         );
@@ -163,12 +139,6 @@ class BloggerProfileScreen extends StatelessWidget {
                   ),
                   AddSkills(
                     text: "Projects",
-                    onPressed: () {
-                      buildShowModalBottomSheet(
-                        context,
-                        widget: const AddSkillModalSheet(title: "Add Projects", blogger: Blogger.project),
-                      );
-                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
@@ -180,12 +150,8 @@ class BloggerProfileScreen extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            return Dismissible(
-                              onDismissed: (direction) {},
-                              key: UniqueKey(),
-                              child: CustomAvatar(
-                                title: "${index + 1}. ${project[index]}",
-                              ),
+                            return const CustomAvatar(
+                              title: "art",
                             );
                           },
                         );

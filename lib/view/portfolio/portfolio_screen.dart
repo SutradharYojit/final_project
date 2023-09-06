@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../resources/resources.dart';
 import '../../widget/widget.dart';
 
+
 class PortfolioScreen extends StatelessWidget {
   const PortfolioScreen({super.key});
 
@@ -29,7 +30,7 @@ class PortfolioScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal:15.w),
+          padding: EdgeInsets.symmetric(horizontal: 15.w),
           child: Column(
             children: [
               Expanded(
@@ -49,7 +50,7 @@ class PortfolioScreen extends StatelessWidget {
                             Text(
                               "Yojit Suthar",
                               style: TextStyle(
-                                fontSize: 20.sp,
+                                fontSize: 18.sp,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -61,25 +62,25 @@ class PortfolioScreen extends StatelessWidget {
                                   Text(
                                     "Email: abc@gmail.com",
                                     style: TextStyle(
-                                      fontSize: 17.sp,
+                                      fontSize: 15.sp,
                                     ),
                                   ),
                                   Text(
                                     "Skills: 25",
                                     style: TextStyle(
-                                      fontSize: 17.sp,
+                                      fontSize: 15.sp,
                                     ),
                                   ),
                                   Text(
                                     "Achivements: 25",
                                     style: TextStyle(
-                                      fontSize: 17.sp,
+                                      fontSize: 15.sp,
                                     ),
                                   ),
                                   Text(
                                     "Project: 25",
                                     style: TextStyle(
-                                      fontSize: 17.sp,
+                                      fontSize: 15.sp,
                                     ),
                                   ),
                                 ],
@@ -99,4 +100,3 @@ class PortfolioScreen extends StatelessWidget {
     );
   }
 }
-
