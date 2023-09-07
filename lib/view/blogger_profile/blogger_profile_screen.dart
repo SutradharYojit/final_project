@@ -1,18 +1,36 @@
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../resources/resources.dart';
+import '../../services/firebase_services.dart';
 import '../../widget/widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'add_skill_buttomsheet.dart';
+import 'blogger_data_provider.dart';
 import 'blogger_skill_provider.dart';
 
 enum Blogger { skills, achievement, project }
 
-class BloggerProfileScreen extends StatelessWidget {
-  BloggerProfileScreen({super.key});
+class BloggerProfileScreen extends ConsumerStatefulWidget {
+  const BloggerProfileScreen({super.key});
 
+  @override
+  ConsumerState<BloggerProfileScreen> createState() => _BloggerProfileScreenState();
+}
+
+class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final auth = FirebaseAuth.instance;
+  final db = FirebaseFirestore.instance;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,17 +62,24 @@ class BloggerProfileScreen extends StatelessWidget {
                         Positioned(
                           bottom: 0,
                           right: 0,
-                          child: CircleAvatar(
-                            radius: 17.r,
-                            child: IconButton(
-                              onPressed: () {},
-                              icon: Center(
-                                child: Icon(
-                                  Icons.camera,
-                                  size: 18.h,
+                          child: Consumer(
+                            builder: (context, ref, child) {
+                              // final blooger= = ref.watch(bloggerData);
+                              return CircleAvatar(
+                                radius: 17.r,
+                                child: IconButton(
+                                  onPressed: () async {
+                                    log("message");
+                                  },
+                                  icon: Center(
+                                    child: Icon(
+                                      Icons.camera,
+                                      size: 18.h,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
                         )
                       ],
@@ -109,7 +134,9 @@ class BloggerProfileScreen extends StatelessWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return Dismissible(
-                              onDismissed: (direction) {},
+                              onDismissed: (direction) {
+                                ref.read(skillsList.notifier).removeSkills(index, context);
+                              },
                               key: UniqueKey(),
                               child: CustomAvatar(
                                 title: "${index + 1}. ${skill[index]}",
@@ -145,8 +172,10 @@ class BloggerProfileScreen extends StatelessWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return Dismissible(
-                              direction: DismissDirection.none,
-                              onDismissed: (direction) {},
+                              // direction: DismissDirection.none,
+                              onDismissed: (direction) {
+                                ref.read(achievementsList.notifier).removeAchievements(index, context);
+                              },
                               key: UniqueKey(),
                               child: CustomAvatar(
                                 title: "${index + 1}. ${achievement[index]}",
@@ -181,7 +210,9 @@ class BloggerProfileScreen extends StatelessWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return Dismissible(
-                              onDismissed: (direction) {},
+                              onDismissed: (direction) {
+                                ref.read(projectList.notifier).removeProject(index, context);
+                              },
                               key: UniqueKey(),
                               child: CustomAvatar(
                                 title: "${index + 1}. ${project[index]}",

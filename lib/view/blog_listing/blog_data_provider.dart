@@ -8,7 +8,9 @@ class BlogData extends StateNotifier<List<BlogDataModel>> {
   BlogData() : super([]);
 
   Future<void> blogData() async {
+    state.clear();
     state = await ApiServices().blogData();
+    state =  List.from(state.reversed);
     state = [...state];
   }
 

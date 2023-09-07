@@ -49,4 +49,7 @@ class FBServiceManager {
   static const fbDescription = "description";
   static const fbPhoneNumber = "phoneNumber";
   static const fbUid = "uid";
+  static const fbSkill = "skill";
+  static const fbAchievement = "achievement";
+  static const fbProject = "project";
 }
