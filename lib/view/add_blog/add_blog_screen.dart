@@ -5,6 +5,8 @@ import 'package:final_project_blog_app/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../services/api_services.dart';
+import '../../services/firebase_services.dart';
 import '../auth/signup/signup_screen.dart';
 
 class AddBlogScreen extends StatefulWidget {
@@ -123,7 +125,15 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                         _descriptionController.text.trim().isEmpty) {
                       requiredAllFilled(context);
                     } else {
-                      //Add Blog Data function
+                      ApiServices().addProduct(
+                        {
+                          "title": _titleController.text.trim(),
+                          "description": _descriptionController.text.trim(),
+                          "authorId": UserGlobalVariables.uid!.toString(),
+                          "imageUrl":
+                              "https://c4.wallpaperflare.com/wallpaper/410/867/750/vector-forest-sunset-forest-sunset-forest-wallpaper-preview.jpg"
+                        },
+                      );
                     }
                   },
                 ),

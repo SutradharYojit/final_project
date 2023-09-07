@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
+import '../../services/services.dart';
 import 'blog_data_provider.dart';
 
 class BlogListScreen extends ConsumerStatefulWidget {
@@ -54,7 +54,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                       ),
                     ),
                     Text(
-                      "Yojit Suthar",
+                      UserGlobalVariables.username!,
                       style: TextStyle(
                         fontSize: 15.sp,
                       ),
@@ -66,6 +66,15 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
           ),
         ),
         actions: [
+          IconButton(
+            onPressed: () {
+              UserPreferences().logOutsetData(context);
+            },
+            icon:   Icon(
+              Icons.logout_rounded,
+              size: 25.h,
+            ),
+          ),
           Padding(
             padding: EdgeInsets.only(right: 15.0.r),
             child: IconButton(
@@ -83,92 +92,97 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.w),
-          child: Column(
-            children: [
-              blogList.isEmpty
-                  ? const Center(
-                      child: Text("No Blog Data"),
-                    )
-                  : Expanded(
-                      child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        padding: EdgeInsets.only(bottom: 15.w),
-                        itemCount: blogList.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              // context.push(RoutesName.blogDetailsScreen);
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Card(
-                                  color: Colors.white,
-                                  elevation: 5,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(10.0.w),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          blogList[index].attributes!.authorId!,
-                                          style: TextStyle(fontSize: 16.sp),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.symmetric(vertical: 10.r),
-                                          constraints: BoxConstraints(minHeight: 150.h),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(15),
-                                            image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: NetworkImage(
-                                                blogList[index].attributes!.imageUrl!,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 7.w),
-                                          child: Text(
-                                            blogList[index].attributes!.title!,
-                                            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(top: 8.0),
-                                          child: Container(
-                                            constraints: BoxConstraints(minHeight: 50.h, maxHeight: 75.h),
-                                            child: Text(
-                                              blogList[index].attributes!.description!,
-                                              softWrap: true,
-                                              overflow: TextOverflow.fade,
-                                              style: TextStyle(
-                                                fontSize: 16.sp,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 8.0.r, bottom: 15.r),
-                                  child: Text(
-                                    blogList[index].attributes!.publishedAt!,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: ColorManager.greyColor,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
+          child: RefreshIndicator(
+            onRefresh: ref.read(blogDataList.notifier).blogData,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                blogList.isEmpty
+                    ? const Center(
+                  child: Text("No Blog Data"),
+                )
+                    : Expanded(
+                  child: ListView.builder(
+                    // reverse: true,
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.only(bottom: 15.w),
+                    itemCount: blogList.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          // context.push(RoutesName.blogDetailsScreen);
                         },
-                      ),
-                    )
-            ],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Card(
+                              color: Colors.white,
+                              elevation: 5,
+                              child: Padding(
+                                padding: EdgeInsets.all(10.0.w),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      blogList[index].attributes!.authorId!,
+                                      style: TextStyle(fontSize: 16.sp),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.symmetric(vertical: 10.r),
+                                      constraints: BoxConstraints(minHeight: 150.h),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(
+                                            blogList[index].attributes!.imageUrl!,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 7.w),
+                                      child: Text(
+                                        blogList[index].attributes!.title!,
+                                        style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Container(
+                                        constraints: BoxConstraints(minHeight: 50.h, maxHeight: 75.h),
+                                        child: Text(
+                                          blogList[index].attributes!.description!,
+                                          softWrap: true,
+                                          overflow: TextOverflow.fade,
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(right: 8.0.r, bottom: 15.r),
+                              child: Text(
+                                blogList[index].attributes!.publishedAt!,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorManager.greyColor,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

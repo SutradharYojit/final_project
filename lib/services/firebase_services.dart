@@ -10,7 +10,7 @@ import '../widget/widget.dart';
 
 class FireBaseServices {
   final auth = FirebaseAuth.instance;
-  final db = FirebaseFirestore.instance;
+  static final db = FirebaseFirestore.instance;
   final bar = WarningBar();
   final userPreferences = UserPreferences();
 
@@ -32,6 +32,9 @@ class FireBaseServices {
             FBServiceManager.fbUserName: userName,
             FBServiceManager.fbEmail: textEmail,
             FBServiceManager.fbUid: auth.currentUser?.uid,
+            FBServiceManager.fbSkill: [],
+            FBServiceManager.fbAchievement: [],
+            FBServiceManager.fbProject: [],
           });
           await userPreferences.saveLoginUserInfo(textEmail, textPass);
           // ignore: use_build_context_synchronously
@@ -110,5 +113,90 @@ class FireBaseServices {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(failed);
     }
+  }
+
+  static Future addSkills(BuildContext context, List listSkill) async {
+    try {
+      await db
+          .collection(FBServiceManager.dbUser)
+          .doc(UserGlobalVariables.docId)
+          .update({FBServiceManager.fbSkill: listSkill}).then((value) => log("update success"));
+    } on FirebaseAuthException catch (e) {
+      log(e.message.toString());
+    }
+  }
+
+  static Future addAchievements(BuildContext context, List listAchievements) async {
+    try {
+      await db
+          .collection(FBServiceManager.dbUser)
+          .doc(UserGlobalVariables.docId)
+          .update({FBServiceManager.fbAchievement: listAchievements}).then((value) => log("update success"));
+    } on FirebaseAuthException catch (e) {
+      log(e.message.toString());
+    }
+  }
+
+  static Future addProject(BuildContext context, List listProject) async {
+    try {
+      await db
+          .collection(FBServiceManager.dbUser)
+          .doc(UserGlobalVariables.docId)
+          .update({FBServiceManager.fbProject: listProject}).then((value) => log("update success"));
+    } on FirebaseAuthException catch (e) {
+      log(e.message.toString());
+    }
+  }
+
+  static Future removeSkill(BuildContext context, String skillText) async {
+    try {
+      await db.collection(FBServiceManager.dbUser).doc(UserGlobalVariables.docId).update({
+        FBServiceManager.fbSkill: FieldValue.arrayRemove([skillText])
+      }).then((value) => log("delete skill success"));
+    } on FirebaseAuthException catch (e) {
+      log(e.message.toString());
+    }
+  }
+
+  static Future removeAchievement(BuildContext context, String achievementText) async {
+    try {
+      await db.collection(FBServiceManager.dbUser).doc(UserGlobalVariables.docId).update({
+        FBServiceManager.fbAchievement: FieldValue.arrayRemove([achievementText])
+      }).then((value) => log("delete achievement success"));
+    } on FirebaseAuthException catch (e) {
+      log(e.message.toString());
+    }
+  }
+
+  static Future removeProject(BuildContext context, String projectText) async {
+    try {
+      await db.collection(FBServiceManager.dbUser).doc(UserGlobalVariables.docId).update({
+        FBServiceManager.fbProject: FieldValue.arrayRemove([projectText])
+      }).then((value) => log("delete project success"));
+    } on FirebaseAuthException catch (e) {
+      log(e.message.toString());
+    }
+  }
+}
+
+class UserGlobalVariables {
+  static String? docId;
+  static String? uid;
+  static String? email;
+  static String? username;
+
+  static final auth = FirebaseAuth.instance;
+  static final db = FirebaseFirestore.instance;
+
+  static Future<void> getUserData() async {
+    final data = await db
+        .collection(FBServiceManager.dbUser)
+        .where(FBServiceManager.fbUid, isEqualTo: auth.currentUser!.uid)
+        .get();
+    log("get Success");
+    uid = auth.currentUser!.uid;
+    docId = data.docs[0].id;
+    email = data.docs[0][FBServiceManager.fbUid];
+    username = data.docs[0][FBServiceManager.fbUserName];
   }
 }
