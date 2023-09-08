@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'app/app.dart';
 import 'firebase_options.dart';
 
-// The main entry point of the Flutter application.
 // Initializes Firebase, sets up image caching, and starts the app.
 Future main() async {
   // Set the log level for CachedNetworkImage to debug.

@@ -5,8 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../services/services.dart';
+import '../../widget/widget.dart';
 import 'blog_data_provider.dart';
-
+// enums to manage the pop menu
 enum EditAuth {
   edit,
   delete,
@@ -23,7 +24,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
   @override
   void initState() {
     super.initState();
-    getData();
+    getData();// Function to gat the api data from the strapi before widget build
   }
 
   EditAuth? selectedItem;
@@ -54,7 +55,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Hello,",
+                      StringManager.helloTxt,
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontFamily: "DancingScript",
@@ -75,7 +76,9 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              UserPreferences().logOutsetData(context);
+              // function of logout from the app
+              //
+              logoutDialogBox(context);
             },
             icon: Icon(
               Icons.logout_rounded,
@@ -88,7 +91,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
               onPressed: () {
                 context.push(
                   RoutesName.addBlogScreen,
-                  extra: BlogPreferences(blogChoice: false,),
+                  extra: BlogPreferences(blogChoice: false,),// passing the params to the add blog screen
                 );
               },
               icon: Icon(
@@ -109,7 +112,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
               children: [
                 blogList.isEmpty
                     ? const Center(
-                        child: Text("No Blog Data"),
+                        child: Text(StringManager.emptyBlogTxt),
                       )
                     : Expanded(
                         child: ListView.builder(
@@ -148,13 +151,14 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                                               ),
                                               Visibility(
                                                 visible:
-                                                    UserGlobalVariables.uid == blogList[index].attributes!.authorId!,
+                                                    UserGlobalVariables.uid == blogList[index].attributes!.authorId!,// When edit update functionality is enabled when the authorId and CurrentUser Id will be match
                                                 child: PopupMenuButton(
                                                   initialValue: selectedItem,
                                                   onSelected: (EditAuth item) {
                                                     if (item == EditAuth.edit) {
                                                       context.push(
                                                         RoutesName.addBlogScreen,
+                                                        //pass the blag data to add blog screen
                                                         extra: BlogPreferences(
                                                           blogChoice: true,
                                                           title: blogList[index].attributes!.title!,
@@ -163,6 +167,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                                                         ),
                                                       );
                                                     } else {
+                                                      // function to delete the blog
                                                       ref
                                                           .read(blogDataList.notifier)
                                                           .blogDelete(blogList[index].id!, index);
@@ -172,14 +177,14 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
                                                     const PopupMenuItem(
                                                       value: EditAuth.edit,
                                                       child: PopMenuBtn(
-                                                        title: "Edit",
+                                                        title: StringManager.editTxt,
                                                         icon: Icons.edit,
                                                       ),
                                                     ),
                                                     const PopupMenuItem(
                                                       value: EditAuth.delete,
                                                       child: PopMenuBtn(
-                                                        title: "Delete",
+                                                        title: StringManager.deleteTxt,
                                                         icon: Icons.delete_outline_rounded,
                                                       ),
                                                     ),
@@ -241,6 +246,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
   }
 }
 
+// class model  to send the blog data as prams to add blog  screen to manage the widget also
 class BlogPreferences {
   final bool blogChoice;
   final String? title;
@@ -254,23 +260,57 @@ class BlogPreferences {
     this.index,
   });
 }
-
-class PopMenuBtn extends StatelessWidget {
-  const PopMenuBtn({super.key, required this.title, required this.icon});
-
-  final IconData icon;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon),
-        Padding(
-          padding: EdgeInsets.only(left: 10.r),
-          child: Text(title),
+// Dialog while logout from the app
+Future<dynamic> logoutDialogBox(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: ColorManager.whiteColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(const Radius.circular(20.0).w)),
+        child: Container(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Are you sure, you want to log out?",
+                style: TextStyle(fontSize: 15.sp),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: Size(90.w, 20.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20).w)),
+                    onPressed: () {
+                      UserPreferences().logOutsetData(context);
+                    },
+                    child: Text(
+                      "Log out",
+                      style: TextStyle(fontSize: 13.sp),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: Size(90.w, 20.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20).w)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "Close",
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
-      ],
-    );
-  }
+      );
+    },
+  );
 }

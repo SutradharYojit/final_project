@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import '../../../resources/resources.dart';
 import '../../../services/services.dart';
 import '../signup/signup_screen.dart';
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -30,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+        WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();// To unfocus on the text filled
       },
       child: Scaffold(
         body: SafeArea(
@@ -92,8 +91,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             _emailController.text.trim().isEmpty ||
                             _passController.text.trim() == "" ||
                             _passController.text.trim().isEmpty) {
-                          requiredAllFilled(context);
+                          requiredAllFilled(context); // through scaffold snackbar
                         } else {
+
+                          // Sign in Function
                           await FireBaseServices().signIN(
                             context,
                             textEmail: _emailController.text.trim(),
@@ -107,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: EdgeInsets.only(top: 12.0.r),
                       child: GestureDetector(
                         onTap: () {
-                          context.goNamed(RoutesName.signupName);
+                          context.goNamed(RoutesName.signupName); // navigate to the signup screen
                         },
                         child: const TextRich(
                           firstText: StringManager.noAccountTxt,

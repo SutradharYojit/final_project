@@ -6,8 +6,8 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../resources/resources.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../services/user_preferences.dart';
+// Splash Screen
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
     userPreferences.getUserInfo();
     navigation();
   }
-
+  // function will load the splash Screen and chech the user credentials art locally stored or not
   void navigation() {
     Duration duration = const Duration(seconds: 3);
     Future.delayed(
@@ -35,8 +35,10 @@ class _SplashScreenState extends State<SplashScreen> {
             userPreferences.email!.isNotEmpty &&
             userPreferences.pass!.isNotEmpty) {
           log(userAuth.toString());
+          // its yes move to dashboard screen
           context.go(RoutesName.dashboardScreen);
         } else {
+          // its no move to login screen
           log(userPreferences.email.toString());
           context.go(RoutesName.loginScreen);
         }

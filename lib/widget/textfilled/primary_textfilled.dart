@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+// this primary textfilled where we use this in all over the app
 class PrimaryTextFilled extends StatelessWidget {
   const PrimaryTextFilled({
     super.key,

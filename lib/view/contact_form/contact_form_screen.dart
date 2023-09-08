@@ -27,8 +27,9 @@ class _ContactFormScreenState extends State<ContactFormScreen> {
         _descriptionController.text.trim().isEmpty ||
         _phoneController.text.trim() == "" ||
         _phoneController.text.trim().isEmpty) {
-      requiredAllFilled(context);
+      requiredAllFilled(context); // send the message to the user for required all the fields
     } else {
+      // Function to send the contact us data and store in firebase
       await FireBaseServices().contactUs(
         context,
         name: _nameController.text.trim(),

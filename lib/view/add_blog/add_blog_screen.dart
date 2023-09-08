@@ -62,54 +62,6 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
             padding: EdgeInsets.all(15.w),
             child: Column(
               children: [
-                Center(
-                  child: DottedBorder(
-                    borderType: BorderType.RRect,
-                    radius: Radius.circular(12.r),
-                    padding: EdgeInsets.all(6.r),
-                    dashPattern: const [7, 3],
-                    strokeWidth: 1,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12.r),
-                      ),
-                      child: imageFile != null
-                          ? SizedBox(
-                              height: 170.h,
-                              width: double.infinity,
-                              child: Image.file(
-                                imageFile!,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : Container(
-                              height: 170.h,
-                              width: double.infinity,
-                              color: ColorManager.gradientLightPurpleColor,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    splashColor: Colors.teal,
-                                    onPressed: () async {
-                                      final image = await picker.pickImage(
-                                        source: ImageSource.gallery,
-                                      );
-                                      setState(() {
-                                        imageFile = File(image!.path);
-                                      });
-                                    },
-                                    icon: Icon(
-                                      Icons.add_circle_outline,
-                                      size: 50.h,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                    ),
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.only(top: 15.r),
                   child: PrimaryTextFilled(
