@@ -1,3 +1,4 @@
+import 'package:final_project_blog_app/resources/resources.dart';
 import 'package:flutter/material.dart';
 import '../view.dart';
 
@@ -14,7 +15,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   final List<Widget> _screens = [
     const PortfolioScreen(),
     const BlogListScreen(),
-      ContactFormScreen(),
+    const ContactFormScreen(),
   ];
 
   @override
@@ -33,15 +34,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.supervised_user_circle_outlined),
-                label: "Portfolio",
+                label: StringManager.portfolioScreen,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.article_outlined),
-                label: "Blog",
+                label: StringManager.blogScreen,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.contactless_outlined),
-                label: "Contact Us",
+                label: StringManager.contactUsScreen,
               ),
             ],
             currentIndex: value,

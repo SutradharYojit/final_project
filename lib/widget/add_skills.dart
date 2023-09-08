@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+
+// this function used in blogger profile screen to add skill, Achievement and project,(user to open bottom sheet)
 class AddSkills extends StatelessWidget {
   const AddSkills({
     super.key,

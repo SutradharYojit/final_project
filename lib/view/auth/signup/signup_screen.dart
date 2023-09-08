@@ -39,7 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+        WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();// unfocus the text field on tapping gesture deatector
       },
       child: Scaffold(
         appBar: AppBar(),
@@ -120,6 +120,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             _passController.text.trim().isEmpty) {
                           requiredAllFilled(context);
                         } else {
+                          //Signup funtion
                           await FireBaseServices().signUP(context,
                               textEmail: _emailController.text.trim(),
                               textPass: _passController.text.trim(),
@@ -131,7 +132,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       padding: EdgeInsets.symmetric(vertical: 12.0.r),
                       child: GestureDetector(
                         onTap: () {
-                          context.go(RoutesName.loginScreen);
+                          context.go(RoutesName.loginScreen); //navgationto login screen
                         },
                         child: const TextRich(
                           firstText: StringManager.haveAccountTxt,

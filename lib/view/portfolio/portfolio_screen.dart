@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:final_project_blog_app/routes/routes_name.dart';
 import 'package:final_project_blog_app/services/firebase_services.dart';
 import 'package:final_project_blog_app/view/blogger_profile/blogger_profile_screen.dart';
@@ -22,7 +21,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   @override
   void initState() {
     super.initState();
-    getUpdates();
+    getUpdates(); // Fetch blogger Porfolio Data
   }
 
   void getUpdates() async {
@@ -37,7 +36,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const AppBarTitle(
-          title: "Portfolio",
+          title: StringManager.portfolioAppBarTitle,
         ),
         actions: [
           Padding(
@@ -45,6 +44,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             child: IconButton(
               onPressed: () {
                 context.push(RoutesName.bloggerProfileScreen, extra: BloggerProfileData(portfolioScreen: true,data: data[0]));
+                // Navigation to user profile screen to add and update the user profile
               },
               icon: const Icon(Icons.edit),
             ),
@@ -53,6 +53,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
       ),
       body: SafeArea(
         child: RefreshIndicator(
+          // refresh Indicator to update the the current profiles Data
           onRefresh: ref.read(bloggerData.notifier).getUserData,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -73,6 +74,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
+                          // Navigation to the see the profile
                           context.push(
                             RoutesName.bloggerProfileScreen,
                             extra: BloggerProfileData(
@@ -109,19 +111,19 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                                         ),
                                       ),
                                       Text(
-                                        "Skills: ${data[index].skill!.length}",
+                                        "${StringManager.skillTxt} ${data[index].skill!.length}",
                                         style: TextStyle(
                                           fontSize: 15.sp,
                                         ),
                                       ),
                                       Text(
-                                        "Achivements:  ${data[index].achievement!.length}",
+                                        "${StringManager.achievementTxt}:  ${data[index].achievement!.length}",
                                         style: TextStyle(
                                           fontSize: 15.sp,
                                         ),
                                       ),
                                       Text(
-                                        "Project:  ${data[index].project!.length}",
+                                        "${StringManager.projectTxt}:  ${data[index].project!.length}",
                                         style: TextStyle(
                                           fontSize: 15.sp,
                                         ),

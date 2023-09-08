@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../resources/resources.dart';
 
+// primary appbar title with app icon and used in porfolio screen and contact screen
 class AppBarTitle extends StatelessWidget {
   const AppBarTitle({
     super.key,

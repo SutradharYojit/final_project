@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'add_skill_buttomsheet.dart';
 import 'blogger_skill_provider.dart';
 
+// Enums we use to mange the add skill/Achievemt / project bottom sheet
 enum Blogger { skills, achievement, project }
 
 class BloggerProfileScreen extends ConsumerStatefulWidget {
@@ -30,28 +31,31 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
   final db = FirebaseFirestore.instance;
   final bar = WarningBar();
   final FocusNode _focus = FocusNode();
-  ValueNotifier<bool> emailFocus = ValueNotifier(false);
+  ValueNotifier<bool> nameFocus = ValueNotifier(false); // to manage the focus
 
   @override
   void initState() {
     super.initState();
+    // call after widget is build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       addData();
-      if(widget.profileData.portfolioScreen){
-        _focus.addListener(_onFocusChange);
+      if (widget.profileData.portfolioScreen) {
+        _focus.addListener(_onFocusChange); // initialize the focus node listener
       }
     });
   }
 
+  // function to check the status of the focus
   void _onFocusChange() {
     if (_focus.hasFocus) {
-      emailFocus.value = true;
+      nameFocus.value = true;
     } else {
-      emailFocus.value = false;
+      nameFocus.value = false;
     }
   }
 
   void addData() {
+    //this case is invoke when user need to add or update the data
     if (widget.profileData.portfolioScreen) {
       final userdata = ref.read(bloggerData);
       ref.read(skillsList.notifier).addAllSkills(userdata[0].skill);
@@ -60,6 +64,7 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
       _nameController.text = widget.profileData.data!.userName!;
       _emailController.text = widget.profileData.data!.email!;
     } else {
+      // this case is invoked when you press the porfoilo profile from the porfolio screeb
       ref.read(skillsList.notifier).addAllSkills(widget.profileData.data!.skill);
       ref.read(achievementsList.notifier).addAllAchievements(widget.profileData.data!.achievement);
       ref.read(projectList.notifier).addAllProject(widget.profileData.data!.project);
@@ -100,13 +105,10 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                           right: 0,
                           child: Consumer(
                             builder: (context, ref, child) {
-                              // final blooger= = ref.watch(bloggerData);
                               return CircleAvatar(
                                 radius: 17.r,
                                 child: IconButton(
-                                  onPressed: () async {
-                                    log("message");
-                                  },
+                                  onPressed: () async {},
                                   icon: Center(
                                     child: Icon(
                                       Icons.camera,
@@ -148,14 +150,16 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                       readOnly: true,
                     ),
                   ),
+                  // widget is invoked when user want to update his username
                   ValueListenableBuilder(
-                    valueListenable: emailFocus,
+                    valueListenable: nameFocus,
                     builder: (context, value, child) {
                       return Visibility(
                         visible: value,
                         child: PrimaryButton(
                           title: StringManager.updateProfileBtn,
                           onTap: () {
+                            // Function to update the the user name
                             FireBaseServices.updateUsername(context, _nameController.text.trim());
                             _focus.unfocus();
                           },
@@ -171,6 +175,7 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                     text: "Skills",
                     visible: widget.profileData.portfolioScreen,
                     onPressed: () {
+                      // to add the skills
                       buildShowModalBottomSheet(
                         context,
                         widget: const AddSkillModalSheet(title: "Add Skill", blogger: Blogger.skills),
@@ -188,10 +193,12 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return Dismissible(
+                              // to manage the dismissable state
                               direction: widget.profileData.portfolioScreen
                                   ? DismissDirection.horizontal
                                   : DismissDirection.none,
                               onDismissed: (direction) {
+                                // function to remove skills
                                 ref.read(skillsList.notifier).removeSkills(index, context);
                               },
                               key: UniqueKey(),
@@ -212,6 +219,7 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                     text: "Achievement",
                     visible: widget.profileData.portfolioScreen,
                     onPressed: () {
+                      //bottom sheet to add the Achievements
                       buildShowModalBottomSheet(
                         context,
                         widget: const AddSkillModalSheet(title: "Add Achievement", blogger: Blogger.achievement),
@@ -233,6 +241,7 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                                   ? DismissDirection.horizontal
                                   : DismissDirection.none,
                               onDismissed: (direction) {
+                                // function to remove Achievements
                                 ref.read(achievementsList.notifier).removeAchievements(index, context);
                               },
                               key: UniqueKey(),
@@ -253,6 +262,8 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                     text: "Projects",
                     visible: widget.profileData.portfolioScreen,
                     onPressed: () {
+                      //bottom sheet to add the project
+
                       buildShowModalBottomSheet(
                         context,
                         widget: const AddSkillModalSheet(title: "Add Projects", blogger: Blogger.project),
@@ -274,6 +285,7 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                                   ? DismissDirection.horizontal
                                   : DismissDirection.none,
                               onDismissed: (direction) {
+                                // function to remove project
                                 ref.read(projectList.notifier).removeProject(index, context);
                               },
                               key: UniqueKey(),
@@ -296,6 +308,8 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
   }
 }
 
+
+// class model to manage the same screen from current user and from another user
 class BloggerProfileData {
   final bool portfolioScreen;
   final UserDataModel? data;

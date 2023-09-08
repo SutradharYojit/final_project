@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+
+// custom Avatar to list the skills , achievements and project
 class CustomAvatar extends StatelessWidget {
   const CustomAvatar({
     super.key,

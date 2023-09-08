@@ -49,22 +49,24 @@ class _AddSkillModalSheetState extends State<AddSkillModalSheet> {
                 ),
                 Consumer(
                   builder: (context, ref, child) {
-                    final listSkill = ref.watch(skillsList);
                     return PrimaryButton(
                       onTap: () {
+                        // switch case to manage the bottom sheet
                         switch (widget.blogger) {
                           case Blogger.skills:
                             {
+                              // function to add the skills to the firebase
                               ref.read(skillsList.notifier).addSkills(
                                 _addSkillCtrl.text.trim(),
                               );
                               final listSkill = ref.watch(skillsList);
-                              FireBaseServices.addSkills(context, listSkill);
+                              FireBaseServices.addSkills(context, listSkill);// add the skills to the firebase
                               _addSkillCtrl.clear();
                               break;
                             }
                           case Blogger.achievement:
                             {
+                              // function to add the achievement to the firebase
                               ref.read(achievementsList.notifier).addAchievements(
                                 _addSkillCtrl.text.trim(),
                               );
@@ -74,12 +76,13 @@ class _AddSkillModalSheetState extends State<AddSkillModalSheet> {
                             }
                           case Blogger.project:
                             {
+                              // function to add the project to the firebase
+
                               ref.read(projectList.notifier).addProject(
                                 _addSkillCtrl.text.trim(),
                               );
                               final listProject = ref.watch(projectList);
                               FireBaseServices.addProject(context, listProject);
-
                               break;
                             }
                           default:

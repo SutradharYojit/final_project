@@ -21,6 +21,12 @@ class StringManager {
   static const signupTitle = "Create your account to start sharing your thoughts with the world!";
   static const haveAccountTxt = "Already have an account?";
 
+  // Dashboard Screen
+  static const portfolioScreen = "Portfolio";
+  static const blogScreen = "Blog";
+  static const contactUsScreen = "Contact Us";
+
+
   //Contact Screen
   static const contactAppBarTxt = "Contact Us";
   static const nameHintTxt = "Enter Your Name";
@@ -39,6 +45,20 @@ class StringManager {
 
   //Bloggers Profile Screen
   static const updateProfileBtn = "Update Profile";
+
+  //Blog List Screen
+  static const helloTxt = "Hello,";
+  static const emptyBlogTxt = "No Blog Data";
+  static const editTxt = "Edit";
+  static const deleteTxt = "Delete";
+
+  // Portfoilo Screen
+  static const portfolioAppBarTitle = "Portfolio";
+  static const skillTxt = "Skills";
+  static const achievementTxt = "Achievements";
+  static const projectTxt = "Projects";
+
+
 
 
 
