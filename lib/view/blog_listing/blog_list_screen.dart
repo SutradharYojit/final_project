@@ -77,7 +77,8 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
           IconButton(
             onPressed: () {
               // function of logout from the app
-              UserPreferences().logOutsetData(context);
+              //
+              logoutDialogBox(context);
             },
             icon: Icon(
               Icons.logout_rounded,
@@ -258,4 +259,58 @@ class BlogPreferences {
     this.description,
     this.index,
   });
+}
+// Dialog while logout from the app
+Future<dynamic> logoutDialogBox(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: ColorManager.whiteColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(const Radius.circular(20.0).w)),
+        child: Container(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Are you sure, you want to log out?",
+                style: TextStyle(fontSize: 15.sp),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: Size(90.w, 20.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20).w)),
+                    onPressed: () {
+                      UserPreferences().logOutsetData(context);
+                    },
+                    child: Text(
+                      "Log out",
+                      style: TextStyle(fontSize: 13.sp),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: Size(90.w, 20.h),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20).w)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "Close",
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
