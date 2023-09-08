@@ -1,3 +1,5 @@
+// Color Manager File, Here all Colours are used in app are defines at on place
+
 import 'package:flutter/material.dart';
 class ColorManager{
   static const Color whiteColor=Colors.white;

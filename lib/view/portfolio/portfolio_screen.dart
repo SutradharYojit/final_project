@@ -1,7 +1,7 @@
 import 'dart:developer';
-
 import 'package:final_project_blog_app/routes/routes_name.dart';
 import 'package:final_project_blog_app/services/firebase_services.dart';
+import 'package:final_project_blog_app/view/blogger_profile/blogger_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,16 +19,16 @@ class PortfolioScreen extends ConsumerStatefulWidget {
 }
 
 class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
-
-
-
   @override
   void initState() {
     super.initState();
-    UserGlobalVariables.getUserData();
-    ref.read(bloggerData.notifier).getUserData();
+    getUpdates();
   }
 
+  void getUpdates() async {
+    await UserGlobalVariables.getUserData();
+    ref.read(bloggerData.notifier).getUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             padding: EdgeInsets.only(right: 10.0.w),
             child: IconButton(
               onPressed: () {
-                context.push(RoutesName.bloggerProfileScreen);
+                context.push(RoutesName.bloggerProfileScreen, extra: BloggerProfileData(portfolioScreen: true,data: data[0]));
               },
               icon: const Icon(Icons.edit),
             ),
@@ -58,76 +58,87 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             padding: EdgeInsets.symmetric(horizontal: 15.w),
             child: loading
                 ? const Center(
-                    child: SpinKitFoldingCube(
-                      color: Colors.black,
-                      size: 45,
-                    ),
-                  )
+              child: SpinKitFoldingCube(
+                color: Colors.black,
+                size: 45,
+              ),
+            )
                 : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              elevation: 10,
-                              color: ColorManager.whiteColor,
-                              child: Padding(
-                                padding: EdgeInsets.all(15.0.w),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Row(children: []),
-                                    Text(
-                                      data[index].userName!,
-                                      style: TextStyle(
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            data[index].email!,
-                                            style: TextStyle(
-                                              fontSize: 15.sp,
-                                            ),
-                                          ),
-                                          Text(
-                                            "Skills: ${data[index].skill!.length}",
-                                            style: TextStyle(
-                                              fontSize: 15.sp,
-                                            ),
-                                          ),
-                                          Text(
-                                            "Achivements:  ${data[index].achievement!.length}",
-                                            style: TextStyle(
-                                              fontSize: 15.sp,
-                                            ),
-                                          ),
-                                          Text(
-                                            "Project:  ${data[index].project!.length}",
-                                            style: TextStyle(
-                                              fontSize: 15.sp,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          context.push(
+                            RoutesName.bloggerProfileScreen,
+                            extra: BloggerProfileData(
+                              portfolioScreen: false,
+                              data: data[index],
+                            ),
+                          );
+                        },
+                        child: Card(
+                          elevation: 10,
+                          color: ColorManager.whiteColor,
+                          child: Padding(
+                            padding: EdgeInsets.all(15.0.w),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Row(children: []),
+                                Text(
+                                  data[index].userName!,
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        data[index].email!,
+                                        style: TextStyle(
+                                          fontSize: 15.sp,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Skills: ${data[index].skill!.length}",
+                                        style: TextStyle(
+                                          fontSize: 15.sp,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Achivements:  ${data[index].achievement!.length}",
+                                        style: TextStyle(
+                                          fontSize: 15.sp,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Project:  ${data[index].project!.length}",
+                                        style: TextStyle(
+                                          fontSize: 15.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      )
-                    ],
+                      );
+                    },
                   ),
+                )
+              ],
+            ),
           ),
         ),
       ),

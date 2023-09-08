@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Duration duration = const Duration(seconds: 3);
     Future.delayed(
       duration,
-      () {
+          () {
         if (userPreferences.email != null &&
             userPreferences.pass != null &&
             userPreferences.email!.isNotEmpty &&

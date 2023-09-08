@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_project_blog_app/resources/resources.dart';
+import 'package:final_project_blog_app/services/firebase_services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../model/model.dart';
 
@@ -19,7 +20,10 @@ class BloggersData extends StateNotifier<List<UserDataModel>> {
     log("Enter 2");
     state.addAll(snapshot.docs.map((docSnapshot) => UserDataModel.fromFirestore(docSnapshot)).toList());
     loading = false;
-    log(state.length.toString());
+    final current = state.where((element) => element.uid==UserGlobalVariables.uid).toList();
+    state.remove(current.first);
+    state.insert(0, current.first);
+    log(current.length.toString());
     state = [...state];
   }
 

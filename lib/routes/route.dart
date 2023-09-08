@@ -1,7 +1,8 @@
 import 'package:go_router/go_router.dart';
+import '../model/model.dart';
 import '../view/view.dart';
 import 'routes_name.dart';
-
+// Defines the app Screen Routing or List of Routes
 GoRouter router = GoRouter(
   routes: [
     GoRoute(
@@ -10,6 +11,7 @@ GoRouter router = GoRouter(
         return const SplashScreen();
       },
     ),
+    // its Routes defines to reduce the stack of screen in login and signup screen
     GoRoute(
         path: RoutesName.loginScreen,
         builder: (context, state) {
@@ -27,31 +29,37 @@ GoRouter router = GoRouter(
     GoRoute(
       path: RoutesName.dashboardScreen,
       builder: (context, state) {
-        return DashBoardScreen();
+        return const DashBoardScreen();
       },
     ),
     GoRoute(
       path: RoutesName.blogDetailsScreen,
       builder: (context, state) {
-        return const BlogDetailsScreen();
+        return BlogDetailsScreen(
+          blogData: state.extra as BlogDataModel,
+        );
       },
     ),
     GoRoute(
       path: RoutesName.contactUsScreen,
       builder: (context, state) {
-        return ContactFormScreen();
+        return const ContactFormScreen();
       },
     ),
     GoRoute(
       path: RoutesName.bloggerProfileScreen,
       builder: (context, state) {
-        return BloggerProfileScreen();
+        return BloggerProfileScreen(
+          profileData: state.extra as BloggerProfileData,
+        );
       },
     ),
     GoRoute(
       path: RoutesName.addBlogScreen,
       builder: (context, state) {
-        return AddBlogScreen();
+        return AddBlogScreen(
+          blogPreference: state.extra as BlogPreferences,
+        );
       },
     ),
   ],

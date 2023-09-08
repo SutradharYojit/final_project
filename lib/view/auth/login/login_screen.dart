@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:final_project_blog_app/routes/routes_name.dart';
 import 'package:final_project_blog_app/widget/widget.dart';
 import 'package:flutter/material.dart';
