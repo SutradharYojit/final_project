@@ -1,3 +1,4 @@
+// Its String Manager File , Defines all String which are using in app
 class StringManager {
   //SplashScreen
   static const myApp = "My Blog";
@@ -33,14 +34,21 @@ class StringManager {
   //Add Blog Screen
   static const titleHintTxt = "Enter Blog Title";
   static const titleLabelTxt = "Blog Title";
-  static const addBlogBtn = "Add Blog";
+  static const addBlogTxt = "Add Blog";
+  static const updateBlogTxt = "Update Blog";
+
+  //Bloggers Profile Screen
+  static const updateProfileBtn = "Update Profile";
+
 
 
 }
-
+// Firebase Service String Manager, the string defines the key(which store the data/value) of the database and defines the firebase collection String
 class FBServiceManager {
   static const serviceFirebaseNoAccount = "Account doesn't exist";
   static const serviceFbSentSuccess = "Message sent Successfully";
+  static const serviceFbUpdateSuccess = "Update Successfully";
+  static const serviceFbDeleteSuccess = "Delete Successfully";
   static const serviceFbSentFail = "Message Failed";
   static const dbUser = "users";
   static const dbContactUs = "contactUs";
@@ -52,4 +60,15 @@ class FBServiceManager {
   static const fbSkill = "skill";
   static const fbAchievement = "achievement";
   static const fbProject = "project";
+}
+
+// Api Service String Manager and key also
+class ApiServiceManager {
+  static const blogAdd = "Blog add Successfully";
+  static const blogUpdate = "Blog update Successfully";
+  static const apiTitleKey = "title";
+  static const apiDescriptionKey = "description";
+  static const apiAuthorKey = "authorId";
+  static const apiImageUrlKey = "imageUrl";
+
 }

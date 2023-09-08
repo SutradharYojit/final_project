@@ -1,3 +1,5 @@
+//This Blog Data model, us to get the data from api
+
 class BlogDataModel {
   int? id;
   Attributes? attributes;
@@ -20,7 +22,7 @@ class BlogDataModel {
     return data;
   }
 }
-
+// this model give the information of blog data to attributes
 class Attributes {
   String? title;
   String? description;

@@ -13,6 +13,7 @@ class PrimaryTextFilled extends StatelessWidget {
     this.prefixText,
     this.maxLength,
     this.readOnly,
+    this.focusNode,
   });
 
   final TextEditingController controller;
@@ -25,10 +26,12 @@ class PrimaryTextFilled extends StatelessWidget {
   final int? maxLength;
   final bool? autofocus;
   final bool? readOnly;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: focusNode,
       readOnly: readOnly ?? false,
       autofocus: autofocus ?? false,
       controller: controller,

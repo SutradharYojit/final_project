@@ -7,10 +7,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../services/api_services.dart';
 import '../../services/firebase_services.dart';
-import '../auth/signup/signup_screen.dart';
+import '../view.dart';
 
 class AddBlogScreen extends StatefulWidget {
-  const AddBlogScreen({super.key});
+  const AddBlogScreen({
+    super.key,
+    required this.blogPreference,
+  });
+
+  //Getting the blog Data from the list of the blogs
+  final BlogPreferences blogPreference;
 
   @override
   State<AddBlogScreen> createState() => _AddBlogScreenState();
@@ -21,6 +27,17 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
   final ImagePicker picker = ImagePicker();
   final TextEditingController _descriptionController = TextEditingController();
   File? imageFile;
+  final bar = WarningBar();
+
+  @override
+  void initState() {
+    super.initState();
+    // the condition check while data is coming from blog list screen and used to update the blog data
+    if (widget.blogPreference.blogChoice) {
+      _titleController.text = widget.blogPreference.title!;
+      _descriptionController.text = widget.blogPreference.description!;
+    }
+  }
 
   @override
   void dispose() {
@@ -33,8 +50,10 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const AppBarTitle(
-          title: "Add Blog",
+        title: AppBarTitle(
+          title: widget.blogPreference.blogChoice
+              ? StringManager.updateBlogTxt
+              : StringManager.addBlogTxt, //check weather its should be add blog or update blog
         ),
       ),
       body: SingleChildScrollView(
@@ -116,24 +135,62 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                   ),
                 ),
                 PrimaryButton(
-                  title: StringManager.addBlogBtn,
+                  title: widget.blogPreference.blogChoice ? StringManager.updateBlogTxt : StringManager.addBlogTxt,
                   onTap: () async {
                     WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
                     if (_titleController.text.trim() == "" ||
                         _titleController.text.trim().isEmpty ||
                         _descriptionController.text.trim() == "" ||
                         _descriptionController.text.trim().isEmpty) {
+                      // through the error snack bar when one of the text filled is empty
                       requiredAllFilled(context);
                     } else {
-                      ApiServices().addProduct(
-                        {
-                          "title": _titleController.text.trim(),
-                          "description": _descriptionController.text.trim(),
-                          "authorId": UserGlobalVariables.uid!.toString(),
-                          "imageUrl":
-                              "https://c4.wallpaperflare.com/wallpaper/410/867/750/vector-forest-sunset-forest-sunset-forest-wallpaper-preview.jpg"
+                      final addBlog = bar.snack(ApiServiceManager.blogAdd, ColorManager.greenColor);
+                      final updateBlog = bar.snack(ApiServiceManager.blogUpdate, ColorManager.greenColor);
+                      // Loading screen
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const Center(
+                            child: Loading(),
+                          );
                         },
                       );
+                      // condition is invoke when the data is pas through from blog details screen
+                      if (widget.blogPreference.blogChoice) {
+                        // function to update the existing blog
+                        ApiServices().editBlogData(
+                          {
+                            ApiServiceManager.apiTitleKey: _titleController.text.trim(),
+                            ApiServiceManager.apiDescriptionKey: _descriptionController.text.trim(),
+                            ApiServiceManager.apiAuthorKey: UserGlobalVariables.uid!.toString(),
+                            ApiServiceManager.apiImageUrlKey:
+                                "https://c4.wallpaperflare.com/wallpaper/410/867/750/vector-forest-sunset-forest-sunset-forest-wallpaper-preview.jpg"
+                          },
+                          widget.blogPreference.index!,
+                        ).then((value) {
+                          _titleController.clear();
+                          _descriptionController.clear();
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(addBlog);
+                        });
+                      } else {
+                        //function to add blog data
+                        ApiServices().addBlogData(
+                          {
+                            ApiServiceManager.apiTitleKey: _titleController.text.trim(),
+                            ApiServiceManager.apiDescriptionKey: _descriptionController.text.trim(),
+                            ApiServiceManager.apiAuthorKey: UserGlobalVariables.uid!.toString(),
+                            ApiServiceManager.apiImageUrlKey:
+                                "https://c4.wallpaperflare.com/wallpaper/410/867/750/vector-forest-sunset-forest-sunset-forest-wallpaper-preview.jpg"
+                          },
+                        ).then(
+                          (value) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(updateBlog);
+                          },
+                        );
+                      }
                     }
                   },
                 ),

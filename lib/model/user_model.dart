@@ -1,3 +1,5 @@
+// This Firebase user data model, To get the list of the user data
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserDataModel {

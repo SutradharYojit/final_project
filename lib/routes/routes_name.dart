@@ -1,3 +1,4 @@
+// Here manage the name routes of the screen and get the routes easily from anywhere in app
 class RoutesName{
   static const String splashScreen="/";
   static const String loginScreen="/LoginScreen";

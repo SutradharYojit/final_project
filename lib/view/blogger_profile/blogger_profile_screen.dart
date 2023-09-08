@@ -1,20 +1,23 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:final_project_blog_app/services/firebase_services.dart';
+import 'package:final_project_blog_app/view/blogger_profile/blogger_data_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../model/model.dart';
 import '../../resources/resources.dart';
-import '../../services/firebase_services.dart';
 import '../../widget/widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'add_skill_buttomsheet.dart';
-import 'blogger_data_provider.dart';
 import 'blogger_skill_provider.dart';
 
 enum Blogger { skills, achievement, project }
 
 class BloggerProfileScreen extends ConsumerStatefulWidget {
-  const BloggerProfileScreen({super.key});
+  const BloggerProfileScreen({super.key, required this.profileData});
+
+  final BloggerProfileData profileData;
 
   @override
   ConsumerState<BloggerProfileScreen> createState() => _BloggerProfileScreenState();
@@ -25,11 +28,44 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
   final TextEditingController _emailController = TextEditingController();
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
+  final bar = WarningBar();
+  final FocusNode _focus = FocusNode();
+  ValueNotifier<bool> emailFocus = ValueNotifier(false);
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      addData();
+      if(widget.profileData.portfolioScreen){
+        _focus.addListener(_onFocusChange);
+      }
+    });
+  }
+
+  void _onFocusChange() {
+    if (_focus.hasFocus) {
+      emailFocus.value = true;
+    } else {
+      emailFocus.value = false;
+    }
+  }
+
+  void addData() {
+    if (widget.profileData.portfolioScreen) {
+      final userdata = ref.read(bloggerData);
+      ref.read(skillsList.notifier).addAllSkills(userdata[0].skill);
+      ref.read(achievementsList.notifier).addAllAchievements(userdata[0].achievement);
+      ref.read(projectList.notifier).addAllProject(userdata[0].project);
+      _nameController.text = widget.profileData.data!.userName!;
+      _emailController.text = widget.profileData.data!.email!;
+    } else {
+      ref.read(skillsList.notifier).addAllSkills(widget.profileData.data!.skill);
+      ref.read(achievementsList.notifier).addAllAchievements(widget.profileData.data!.achievement);
+      ref.read(projectList.notifier).addAllProject(widget.profileData.data!.project);
+      _nameController.text = widget.profileData.data!.userName!;
+      _emailController.text = widget.profileData.data!.email!;
+    }
   }
 
   @override
@@ -88,6 +124,8 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 15.r),
                     child: PrimaryTextFilled(
+                      focusNode: _focus,
+                      readOnly: !widget.profileData.portfolioScreen,
                       controller: _nameController,
                       hintText: "Your Name",
                       labelText: "Name",
@@ -110,12 +148,28 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                       readOnly: true,
                     ),
                   ),
+                  ValueListenableBuilder(
+                    valueListenable: emailFocus,
+                    builder: (context, value, child) {
+                      return Visibility(
+                        visible: value,
+                        child: PrimaryButton(
+                          title: StringManager.updateProfileBtn,
+                          onTap: () {
+                            FireBaseServices.updateUsername(context, _nameController.text.trim());
+                            _focus.unfocus();
+                          },
+                        ),
+                      );
+                    },
+                  ),
                   Divider(
                     color: ColorManager.greyColor,
                     height: 30.h,
                   ),
                   AddSkills(
                     text: "Skills",
+                    visible: widget.profileData.portfolioScreen,
                     onPressed: () {
                       buildShowModalBottomSheet(
                         context,
@@ -134,6 +188,9 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return Dismissible(
+                              direction: widget.profileData.portfolioScreen
+                                  ? DismissDirection.horizontal
+                                  : DismissDirection.none,
                               onDismissed: (direction) {
                                 ref.read(skillsList.notifier).removeSkills(index, context);
                               },
@@ -153,6 +210,7 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                   ),
                   AddSkills(
                     text: "Achievement",
+                    visible: widget.profileData.portfolioScreen,
                     onPressed: () {
                       buildShowModalBottomSheet(
                         context,
@@ -165,14 +223,15 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                     child: Consumer(
                       builder: (context, ref, child) {
                         final achievement = ref.watch(achievementsList);
-
                         return ListView.builder(
                           itemCount: achievement.length,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return Dismissible(
-                              // direction: DismissDirection.none,
+                              direction: widget.profileData.portfolioScreen
+                                  ? DismissDirection.horizontal
+                                  : DismissDirection.none,
                               onDismissed: (direction) {
                                 ref.read(achievementsList.notifier).removeAchievements(index, context);
                               },
@@ -192,6 +251,7 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                   ),
                   AddSkills(
                     text: "Projects",
+                    visible: widget.profileData.portfolioScreen,
                     onPressed: () {
                       buildShowModalBottomSheet(
                         context,
@@ -210,6 +270,9 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return Dismissible(
+                              direction: widget.profileData.portfolioScreen
+                                  ? DismissDirection.horizontal
+                                  : DismissDirection.none,
                               onDismissed: (direction) {
                                 ref.read(projectList.notifier).removeProject(index, context);
                               },
@@ -231,4 +294,14 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
       ),
     );
   }
+}
+
+class BloggerProfileData {
+  final bool portfolioScreen;
+  final UserDataModel? data;
+
+  BloggerProfileData({
+    this.data,
+    required this.portfolioScreen,
+  });
 }
