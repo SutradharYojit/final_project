@@ -21,9 +21,11 @@ dependencies:
   flutter_screenutil: ^5.9.0
   lottie: ^2.6.0
   fluttertoast: ^8.2.2 #
-  image_picker: ^1.0.4
+  image_picker: ^1.0.4 #
+  shimmer: ^3.0.0
+  vibration: ^1.8.1
   cached_network_image: ^3.2.3 #
-  dotted_border: ^2.0.0+3
+  dotted_border: ^2.0.0+3 #
   firebase_storage: ^11.2.6 #
   http: ^1.1.0
 dev_dependencies:

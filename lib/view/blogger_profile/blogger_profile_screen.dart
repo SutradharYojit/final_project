@@ -5,6 +5,7 @@ import 'package:final_project_blog_app/view/blogger_profile/blogger_data_provide
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vibration/vibration.dart';
 import '../../model/model.dart';
 import '../../resources/resources.dart';
 import '../../widget/widget.dart';
@@ -176,6 +177,8 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                     visible: widget.profileData.portfolioScreen,
                     onPressed: () {
                       // to add the skills
+                      Vibration.vibrate(duration: 80);//Vibration feature to improve user experience
+
                       buildShowModalBottomSheet(
                         context,
                         widget: const AddSkillModalSheet(title: "Add Skill", blogger: Blogger.skills),
@@ -199,6 +202,8 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                                   : DismissDirection.none,
                               onDismissed: (direction) {
                                 // function to remove skills
+                                Vibration.vibrate(duration: 120);//Vibration feature to improve user experience
+
                                 ref.read(skillsList.notifier).removeSkills(index, context);
                               },
                               key: UniqueKey(),
@@ -220,6 +225,8 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                     visible: widget.profileData.portfolioScreen,
                     onPressed: () {
                       //bottom sheet to add the Achievements
+                      Vibration.vibrate(duration: 80);//Vibration feature to improve user experience
+
                       buildShowModalBottomSheet(
                         context,
                         widget: const AddSkillModalSheet(title: "Add Achievement", blogger: Blogger.achievement),
@@ -242,6 +249,7 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                                   : DismissDirection.none,
                               onDismissed: (direction) {
                                 // function to remove Achievements
+                                Vibration.vibrate(duration: 120);//Vibration feature to improve user experience
                                 ref.read(achievementsList.notifier).removeAchievements(index, context);
                               },
                               key: UniqueKey(),
@@ -263,6 +271,7 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                     visible: widget.profileData.portfolioScreen,
                     onPressed: () {
                       //bottom sheet to add the project
+                      Vibration.vibrate(duration: 80);//Vibration feature to improve user experience
 
                       buildShowModalBottomSheet(
                         context,
@@ -286,6 +295,7 @@ class _BloggerProfileScreenState extends ConsumerState<BloggerProfileScreen> {
                                   : DismissDirection.none,
                               onDismissed: (direction) {
                                 // function to remove project
+                                Vibration.vibrate(duration: 150);
                                 ref.read(projectList.notifier).removeProject(index, context);
                               },
                               key: UniqueKey(),

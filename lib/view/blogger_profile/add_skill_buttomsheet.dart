@@ -44,7 +44,7 @@ class _AddSkillModalSheetState extends State<AddSkillModalSheet> {
                     size: 30.sp,
                     color: ColorManager.gradientPurpleColor,
                   ),
-                  maxLength: 15,
+                  maxLength: 20,
                   maxLines: 1,
                 ),
                 Consumer(

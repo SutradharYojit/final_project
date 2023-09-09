@@ -11,7 +11,7 @@ class ApiServices {
   Future blogData() async {
     List<BlogDataModel> blogData = [];
     try {
-      http.Response response = await http.get(Uri.parse(APIConstants.baseUrl));
+      http.Response response = await http.get(Uri.parse("http://10.1.81.185:1337/api/blogs"));
       log(response.statusCode.toString());
       if (response.statusCode == ServerStatusCodes.success) {
         var jsonData = jsonDecode(response.body)['data'];

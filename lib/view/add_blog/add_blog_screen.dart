@@ -121,10 +121,8 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                           },
                           widget.blogPreference.index!,
                         ).then((value) {
-                          _titleController.clear();
-                          _descriptionController.clear();
                           Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(addBlog);
+                          ScaffoldMessenger.of(context).showSnackBar(updateBlog);
                         });
                       } else {
                         //function to add blog data
@@ -138,8 +136,10 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                           },
                         ).then(
                           (value) {
+                            _titleController.clear();
+                            _descriptionController.clear();
                             Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(updateBlog);
+                            ScaffoldMessenger.of(context).showSnackBar(addBlog);
                           },
                         );
                       }
