@@ -9,4 +9,6 @@ class AnimationAssets {
 
 class ImageAssets {
   static const String projectLogo = "$IMAGES_PATH/project-logo.png";
+  static const String emptyBlogLogo = "$IMAGES_PATH/folder.png";
 }
+

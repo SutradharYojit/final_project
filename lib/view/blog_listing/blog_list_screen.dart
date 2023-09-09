@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../services/services.dart';
 import '../../widget/widget.dart';
 import 'blog_data_provider.dart';
+
 // enums to manage the pop menu
 enum EditAuth {
   edit,
@@ -20,13 +21,31 @@ class BlogListScreen extends ConsumerStatefulWidget {
   ConsumerState<BlogListScreen> createState() => _BlogListScreenState();
 }
 
-class _BlogListScreenState extends ConsumerState<BlogListScreen> {
+class _BlogListScreenState extends ConsumerState<BlogListScreen> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    getData();// Function to gat the api data from the strapi before widget build
+    getData(); // Function to gat the api data from the strapi before widget build
+    _scrollController.addListener(() {
+      if (_scrollController.offset > 1000) {
+        _animationController.forward();
+      } else {
+        _animationController.reverse();
+      }
+    });
   }
 
+  final ScrollController _scrollController = ScrollController();
+  late final AnimationController _animationController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 700),
+  );
+  late final Animation<Offset> position = Tween<Offset>(
+    begin: const Offset(10, 0),
+    end: const Offset(0, 0),
+  ).animate(
+    CurvedAnimation(parent: _animationController, curve: Curves.linear),
+  );
   EditAuth? selectedItem;
 
   Future<void> getData() async {
@@ -91,7 +110,9 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
               onPressed: () {
                 context.push(
                   RoutesName.addBlogScreen,
-                  extra: BlogPreferences(blogChoice: false,),// passing the params to the add blog screen
+                  extra: BlogPreferences(
+                    blogChoice: false,
+                  ), // passing the params to the add blog screen
                 );
               },
               icon: Icon(
@@ -111,130 +132,147 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 blogList.isEmpty
-                    ? const Center(
-                        child: Text(StringManager.emptyBlogTxt),
+                    ? Center(
+                        child: Column(
+                          children: [
+                            Image.asset(ImageAssets.emptyBlogLogo, height: 60.h),
+                            const Text(StringManager.emptyBlogTxt)
+                          ],
+                        ),
                       )
                     : Expanded(
-                        child: ListView.builder(
-                          // reverse: true,
-                          physics: const BouncingScrollPhysics(),
-                          padding: EdgeInsets.only(bottom: 15.w),
-                          itemCount: blogList.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                context.push(RoutesName.blogDetailsScreen, extra: blogList[index]);
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Card(
-                                    color: Colors.white,
-                                    elevation: 5,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Stack(
+                          children: [
+                            ListView.builder(
+                              // reverse: true,
+                              physics: const BouncingScrollPhysics(),
+                              padding: EdgeInsets.only(bottom: 15.w),
+                              itemCount: blogList.length,
+                              controller: _scrollController,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    context.push(RoutesName.blogDetailsScreen, extra: blogList[index]);
+                                  },
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Card(
+                                        color: Colors.white,
+                                        elevation: 5,
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 15),
-                                                child: Text(
-                                                  blogList[index].attributes!.publishedAt!.substring(0, 10),
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: ColorManager.greyColor,
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 15),
+                                                    child: Text(
+                                                      blogList[index].attributes!.publishedAt!.substring(0, 10),
+                                                      style: const TextStyle(
+                                                        fontWeight: FontWeight.w500,
+                                                        color: ColorManager.greyColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Visibility(
+                                                    visible: UserGlobalVariables.uid ==
+                                                        blogList[index].attributes!.authorId!,
+                                                    // When edit update functionality is enabled when the authorId and CurrentUser Id will be match
+                                                    child: PopupMenuButton(
+                                                      initialValue: selectedItem,
+                                                      onSelected: (EditAuth item) {
+                                                        if (item == EditAuth.edit) {
+                                                          context.push(
+                                                            RoutesName.addBlogScreen,
+                                                            //pass the blag data to add blog screen
+                                                            extra: BlogPreferences(
+                                                                blogChoice: true,
+                                                                title: blogList[index].attributes!.title!,
+                                                                description: blogList[index].attributes!.description!,
+                                                                index: blogList[index].id!),
+                                                          );
+                                                        } else {
+                                                          // function to delete the blog
+                                                          ref
+                                                              .read(blogDataList.notifier)
+                                                              .blogDelete(blogList[index].id!, index);
+                                                        }
+                                                      },
+                                                      itemBuilder: (BuildContext context) => <PopupMenuEntry<EditAuth>>[
+                                                        const PopupMenuItem(
+                                                          value: EditAuth.edit,
+                                                          child: PopMenuBtn(
+                                                            title: StringManager.editTxt,
+                                                            icon: Icons.edit,
+                                                          ),
+                                                        ),
+                                                        const PopupMenuItem(
+                                                          value: EditAuth.delete,
+                                                          child: PopMenuBtn(
+                                                            title: StringManager.deleteTxt,
+                                                            icon: Icons.delete_outline_rounded,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              Container(
+                                                // margin: EdgeInsets.symmetric(vertical: 10.r),
+                                                constraints: BoxConstraints(minHeight: 150.h),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(15),
+                                                  image: DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: NetworkImage(
+                                                      blogList[index].attributes!.imageUrl!,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                              Visibility(
-                                                visible:
-                                                    UserGlobalVariables.uid == blogList[index].attributes!.authorId!,// When edit update functionality is enabled when the authorId and CurrentUser Id will be match
-                                                child: PopupMenuButton(
-                                                  initialValue: selectedItem,
-                                                  onSelected: (EditAuth item) {
-                                                    if (item == EditAuth.edit) {
-                                                      context.push(
-                                                        RoutesName.addBlogScreen,
-                                                        //pass the blag data to add blog screen
-                                                        extra: BlogPreferences(
-                                                          blogChoice: true,
-                                                          title: blogList[index].attributes!.title!,
-                                                          description: blogList[index].attributes!.description!,
-                                                          index: blogList[index].id!
-                                                        ),
-                                                      );
-                                                    } else {
-                                                      // function to delete the blog
-                                                      ref
-                                                          .read(blogDataList.notifier)
-                                                          .blogDelete(blogList[index].id!, index);
-                                                    }
-                                                  },
-                                                  itemBuilder: (BuildContext context) => <PopupMenuEntry<EditAuth>>[
-                                                    const PopupMenuItem(
-                                                      value: EditAuth.edit,
-                                                      child: PopMenuBtn(
-                                                        title: StringManager.editTxt,
-                                                        icon: Icons.edit,
-                                                      ),
-                                                    ),
-                                                    const PopupMenuItem(
-                                                      value: EditAuth.delete,
-                                                      child: PopMenuBtn(
-                                                        title: StringManager.deleteTxt,
-                                                        icon: Icons.delete_outline_rounded,
-                                                      ),
-                                                    ),
-                                                  ],
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(vertical: 7.w),
+                                                child: Text(
+                                                  blogList[index].attributes!.title!,
+                                                  style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800),
                                                 ),
-                                              )
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 8.0),
+                                                child: Container(
+                                                  constraints: BoxConstraints(minHeight: 30.h, maxHeight: 75.h),
+                                                  child: Text(
+                                                    blogList[index].attributes!.description!,
+                                                    softWrap: true,
+                                                    overflow: TextOverflow.fade,
+                                                    style: TextStyle(
+                                                      fontSize: 16.sp,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
                                             ],
                                           ),
-                                          Container(
-                                            // margin: EdgeInsets.symmetric(vertical: 10.r),
-                                            constraints: BoxConstraints(minHeight: 150.h),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(15),
-                                              image: DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: NetworkImage(
-                                                  blogList[index].attributes!.imageUrl!,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 7.w),
-                                            child: Text(
-                                              blogList[index].attributes!.title!,
-                                              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w800),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 8.0),
-                                            child: Container(
-                                              constraints: BoxConstraints(minHeight: 30.h, maxHeight: 75.h),
-                                              child: Text(
-                                                blogList[index].attributes!.description!,
-                                                softWrap: true,
-                                                overflow: TextOverflow.fade,
-                                                style: TextStyle(
-                                                  fontSize: 16.sp,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            );
-                          },
+                                );
+                              },
+                            ),
+                            //scroll animation
+
+                            Positioned(
+                              bottom: 15.h,
+                              right: 0.h,
+                              child: UpAnimation(position: position, scrollController: _scrollController),
+                            ),
+                          ],
                         ),
                       )
               ],
@@ -245,6 +283,7 @@ class _BlogListScreenState extends ConsumerState<BlogListScreen> {
     );
   }
 }
+
 
 // class model  to send the blog data as prams to add blog  screen to manage the widget also
 class BlogPreferences {
@@ -260,6 +299,7 @@ class BlogPreferences {
     this.index,
   });
 }
+
 // Dialog while logout from the app
 Future<dynamic> logoutDialogBox(BuildContext context) {
   return showDialog(
