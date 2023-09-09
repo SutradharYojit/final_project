@@ -87,86 +87,87 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> with SingleTi
           onRefresh: ref.read(bloggerData.notifier).getUserData,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 15.w),
-            child: loading
-                ? Center(
-                    child: ShimmerLoading(
-                      height: 80.h,
-                    ),
-                  )
-                : Stack(
+            child: Column(
+              children: [
+                loading
+                    ? Expanded(
+                  child: ShimmerLoading(
+                    height: 80.h,
+                  ),
+                )
+                    : Expanded(
+                  child: Stack(
                     children: [
-                      Expanded(
-                        child: ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: data.length,
-                          controller: _scrollController,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                // Navigation to the see the profile
-                                context.push(
-                                  RoutesName.bloggerProfileScreen,
-                                  extra: BloggerProfileData(
-                                    portfolioScreen: false,
-                                    data: data[index],
-                                  ),
-                                );
-                              },
-                              child: Card(
-                                elevation: 10,
-                                color: ColorManager.whiteColor,
-                                child: Padding(
-                                  padding: EdgeInsets.all(15.0.w),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Row(children: []),
-                                      Text(
-                                        data[index].userName!,
-                                        style: TextStyle(
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                      ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: data.length,
+                        controller: _scrollController,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              // Navigation to the see the profile
+                              context.push(
+                                RoutesName.bloggerProfileScreen,
+                                extra: BloggerProfileData(
+                                  portfolioScreen: false,
+                                  data: data[index],
+                                ),
+                              );
+                            },
+                            child: Card(
+                              elevation: 10,
+                              color: ColorManager.whiteColor,
+                              child: Padding(
+                                padding: EdgeInsets.all(15.0.w),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Row(children: []),
+                                    Text(
+                                      data[index].userName!,
+                                      style: TextStyle(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              data[index].email!,
-                                              style: TextStyle(
-                                                fontSize: 15.sp,
-                                              ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            data[index].email!,
+                                            style: TextStyle(
+                                              fontSize: 15.sp,
                                             ),
-                                            Text(
-                                              "${StringManager.skillTxt} ${data[index].skill!.length}",
-                                              style: TextStyle(
-                                                fontSize: 15.sp,
-                                              ),
+                                          ),
+                                          Text(
+                                            "${StringManager.skillTxt} ${data[index].skill!.length}",
+                                            style: TextStyle(
+                                              fontSize: 15.sp,
                                             ),
-                                            Text(
-                                              "${StringManager.achievementTxt}:  ${data[index].achievement!.length}",
-                                              style: TextStyle(
-                                                fontSize: 15.sp,
-                                              ),
+                                          ),
+                                          Text(
+                                            "${StringManager.achievementTxt}:  ${data[index].achievement!.length}",
+                                            style: TextStyle(
+                                              fontSize: 15.sp,
                                             ),
-                                            Text(
-                                              "${StringManager.projectTxt}:  ${data[index].project!.length}",
-                                              style: TextStyle(
-                                                fontSize: 15.sp,
-                                              ),
+                                          ),
+                                          Text(
+                                            "${StringManager.projectTxt}:  ${data[index].project!.length}",
+                                            style: TextStyle(
+                                              fontSize: 15.sp,
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                          );
+                        },
                       ),
                       //scroll animation
                       Positioned(
@@ -177,6 +178,9 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> with SingleTi
 
                     ],
                   ),
+                ),
+              ],
+            )
           ),
         ),
       ),
